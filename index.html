@@ -1,20 +1,5 @@
 
 <!DOCTYPE html>
-<script type="application/json" id="cowork-artifact-meta">
-{
-  "name": "Roth Ira Portfolio Dashboard",
-  "schemaVersion": 1,
-  "description": "Full operational dashboard for Account 5OC33019. Five tabs — Overview, Positions, Risk & TICs, Watchlist, Schedule. Watchlist tab shows 10 candidates each with: full thesis, which current holding they replace and why, OCO rationale, contrarian bear case, specific buy trigger, conviction score with trend history, AI dependency %, and pattern recognition stage. Filterable by theme or trigger proximity. Auto-updated every Sunday by the Weekly Watchlist Review scheduled task.",
-  "mcpTools": [
-    "mcp__public-com__get_portfolio",
-    "mcp__public-com__get_quotes"
-  ],
-  "mcpServerNames": [
-    "public-com",
-    "public-com"
-  ]
-}
-</script>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -270,7 +255,7 @@ tr:hover td{background:#f8fbff}
 
 <script>
 // ══ CONSTANTS ════════════════════════════════════════════════════════
-const ACCT = "5OC33019";
+// Account ID is server-side only
 const INCEPTION_VAL = 1009.73;
 const QQQ_INCEPTION = 742.46;
 const THEMES = {RTX:"Defense",ETN:"Infrastructure",GE:"Aerospace",PLTR:"Defense",MELI:"Growth",CEG:"Nuclear",PWR:"Infrastructure",LMT:"Defense",LLY:"Healthcare",NVDA:"AI/Tech",VST:"Nuclear"};
@@ -428,41 +413,32 @@ function filterWL(filter,el){
 }
 
 // ══ LOAD DATA ════════════════════════════════════════════════════════
-function extractMCP(r){
-  if(r===null||r===undefined)return r;
-  if(r.content&&Array.isArray(r.content)){
-    const textBlock=r.content.find(c=>c.type==='text'&&c.text);
-    if(textBlock){try{return JSON.parse(textBlock.text);}catch(e){return textBlock.text;}}
-  }
-  if(typeof r.result==='string'){try{return JSON.parse(r.result);}catch(e){return r.result;}}
-  if(r.result!==undefined)return r.result;
-  if(typeof r==='string'){try{return JSON.parse(r);}catch(e){return r;}}
-  return r;
-}
-function deepParse(r){return extractMCP(r);}
+// Netlify functions return plain JSON
 
 async function loadAll(){
   document.getElementById('ts').textContent='Refreshing…';
-  const dbg=s=>{document.getElementById('ts').textContent=s;};
 
-  // Load portfolio
+  // ── Portfolio ──────────────────────────────────────────────────────
   let p={positions:[],equity:[]};
   try{
-    const raw=await window.cowork.callMcpTool("mcp__public-com__get_portfolio",{account_id:ACCT});
-    const parsed=extractMCP(raw);
-    if(parsed&&Array.isArray(parsed.positions))p=parsed;
-  }catch(e){dbg('Portfolio error: '+e.message);}
+    const res=await fetch('/api/portfolio');
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    if(data&&Array.isArray(data.positions))p=data;
+  }catch(e){document.getElementById('ts').textContent='Portfolio error: '+e.message;}
 
-  // Load quotes
+  // ── Quotes ─────────────────────────────────────────────────────────
   let qArr=[];
   try{
-    const raw=await window.cowork.callMcpTool("mcp__public-com__get_quotes",
-      {symbols:["QQQ","RTX","ETN","GE","PLTR","MELI","CEG","PWR","LMT","LLY","NVDA","VST"]});
-    const parsed=extractMCP(raw);
-    if(Array.isArray(parsed))qArr=parsed;
+    const res=await fetch('/api/quotes',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({symbols:['QQQ','RTX','ETN','GE','PLTR','MELI','CEG','PWR','LMT','LLY','NVDA','VST']}),
+    });
+    if(res.ok)qArr=await res.json();
   }catch(e){}
 
-  const qqqQ=qArr.find(x=>x&&x.instrument&&x.instrument.symbol==='QQQ');
+  const qqqQ=Array.isArray(qArr)?qArr.find(x=>x&&x.instrument&&x.instrument.symbol==='QQQ'):null;
   const qqqPrice=qqqQ?parseFloat(qqqQ.last):null;
 
   try{renderOverview(p,qqqPrice);}catch(e){
