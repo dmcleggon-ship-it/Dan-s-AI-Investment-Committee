@@ -442,10 +442,10 @@ function extractMCP(r){
   if(r===null||r===undefined)return r;
   if(r.content&&Array.isArray(r.content)){
     const textBlock=r.content.find(c=>c.type==='text'&&c.text);
-    if(textBlock){try{return JSON.parse(textBlock.text);}catch(e){return textBlock.text;}}
+    if(textBlock){try{return extractMCP(JSON.parse(textBlock.text));}catch(e){return textBlock.text;}}
   }
-  if(typeof r.result==='string'){try{return JSON.parse(r.result);}catch(e){return r.result;}}
-  if(r.result!==undefined)return r.result;
+  if(typeof r.result==='string'){try{return extractMCP(JSON.parse(r.result));}catch(e){return r.result;}}
+  if(r.result!==undefined)return extractMCP(r.result);
   if(typeof r==='string'){try{return JSON.parse(r);}catch(e){return r;}}
   return r;
 }
