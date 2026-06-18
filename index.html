@@ -129,7 +129,7 @@ tr:hover td{background:#f8fbff}
 <div class="tabs">
   <div class="tab active" onclick="showTab('overview',this)">Overview</div>
   <div class="tab" onclick="showTab('positions',this)">Positions</div>
-  <div class="tab" onclick="showTab('risk',this)">Risk &amp; TICs</div>
+  <div class="tab" onclick="showTab('risk',this)">Risk & TICs</div>
   <div class="tab" onclick="showTab('watchlist',this)">Watchlist <span id="wl-count-badge" style="background:#B8860B;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:4px">10</span></div>
   <div class="tab" onclick="showTab('schedule',this)">Schedule</div>
 </div>
@@ -144,13 +144,13 @@ tr:hover td{background:#f8fbff}
     </div>
     <div class="grid" style="gap:12px;align-content:start">
       <div class="panel">
-        <div class="panel-hdr"><span>MARKET REGIME</span><span class="badge">Jun 15, 2026</span></div>
+        <div class="panel-hdr"><span>MARKET REGIME</span><span class="badge">Jun 2, 2026</span></div>
         <div class="regime-grid">
           <div class="regime-cell"><div class="regime-lbl">Classification</div><div class="regime-val" style="color:#B8860B;font-size:14px">Neutral→Risk On</div></div>
-          <div class="regime-cell"><div class="regime-lbl">Fear &amp; Greed</div><div class="regime-val amber">34 — Fear</div></div>
-          <div class="regime-cell"><div class="regime-lbl">VIX</div><div class="regime-val green">~17.7</div></div>
-          <div class="regime-cell"><div class="regime-lbl">S&amp;P 500</div><div class="regime-val green">~7,540 (+1.5%)</div></div>
-          <div class="regime-cell"><div class="regime-lbl">Leadership</div><div class="regime-val" style="font-size:12px">Tech-led rally (Iran ceasefire)</div></div>
+          <div class="regime-cell"><div class="regime-lbl">Fear & Greed</div><div class="regime-val green">59 — Greed</div></div>
+          <div class="regime-cell"><div class="regime-lbl">VIX</div><div class="regime-val green">~15.3</div></div>
+          <div class="regime-cell"><div class="regime-lbl">S&P 500</div><div class="regime-val">~7,613</div></div>
+          <div class="regime-cell"><div class="regime-lbl">Leadership</div><div class="regime-val" style="font-size:12px">Energy · Industrials</div></div>
           <div class="regime-cell"><div class="regime-lbl">Halt status</div><div class="regime-val green" style="font-size:12px">None active</div></div>
         </div>
       </div>
@@ -174,7 +174,7 @@ tr:hover td{background:#f8fbff}
 <div class="page" id="tab-risk">
   <div class="grid g2" style="margin-bottom:12px">
     <div class="panel">
-      <div class="panel-hdr"><span>DRAWDOWN &amp; POLICY COMPLIANCE</span></div>
+      <div class="panel-hdr"><span>DRAWDOWN & POLICY COMPLIANCE</span></div>
       <div id="risk-meters"><div class="loading">Loading…</div></div>
     </div>
     <div class="panel">
@@ -193,7 +193,7 @@ tr:hover td{background:#f8fbff}
   <div class="panel" style="margin-bottom:0">
     <div class="panel-hdr">
       <span>REPLACEMENT CANDIDATES — DECISION SUPPORT</span>
-      <span class="badge" id="wl-updated">Updated: Jun 15, 2026 · Next: Sun Jun 21 via Weekly Task</span>
+      <span class="badge" id="wl-updated">Updated: Jun 2, 2026 (initial) · <span id="wl-next-date">Next: loading…</span></span>
     </div>
     <div class="wl-controls">
       <button class="wl-filter-btn active" onclick="filterWL('all',this)">All (10)</button>
@@ -214,45 +214,35 @@ tr:hover td{background:#f8fbff}
   <div class="grid g2" style="margin-bottom:12px">
     <div class="panel">
       <div class="panel-hdr"><span>AUTONOMOUS MANAGEMENT SCHEDULE</span></div>
-      <div class="sched-row"><div class="sched-task">Daily Market Pulse</div><div style="color:#888;font-size:11px">Weekdays 8:30 AM</div><div class="sched-next">Tomorrow 8:30 AM</div></div>
-      <div class="sched-row"><div class="sched-task">Daily Risk Monitor</div><div style="color:#888;font-size:11px">Weekdays 4:30 PM</div><div class="sched-next">Today 4:30 PM</div></div>
-      <div class="sched-row"><div class="sched-task">Weekly Watchlist Review</div><div style="color:#888;font-size:11px">Sundays 9:00 AM</div><div class="sched-next">Sun Jun 21</div></div>
-      <div class="sched-row"><div class="sched-task">Monthly Portfolio Snapshot</div><div style="color:#888;font-size:11px">First Monday of month</div><div class="sched-next">Mon Jul 6</div></div>
-      <div class="sched-row"><div class="sched-task">Quarterly Committee Review</div><div style="color:#888;font-size:11px">First Monday Mar/Jun/Sep/Dec</div><div class="sched-next">Mon Sep 7</div></div>
-      <div class="sched-row"><div class="sched-task">Annual Reassessment</div><div style="color:#888;font-size:11px">June 1 annually</div><div style="color:#555;font-size:11px">Jun 1, 2027</div></div>
+      <div class="sched-row"><div class="sched-task">Daily Market Pulse</div><div style="color:#888;font-size:11px">Weekdays 8:30 AM</div><div class="sched-next" id="sched-pulse">—</div></div>
+      <div class="sched-row"><div class="sched-task">Daily Risk Monitor</div><div style="color:#888;font-size:11px">Weekdays 4:30 PM</div><div class="sched-next" id="sched-risk">—</div></div>
+      <div class="sched-row"><div class="sched-task">Weekly Watchlist Review</div><div style="color:#888;font-size:11px">Sundays 9:00 AM</div><div class="sched-next" id="sched-watchlist">—</div></div>
+      <div class="sched-row"><div class="sched-task">Monthly Portfolio Snapshot</div><div style="color:#888;font-size:11px">First Monday of month</div><div class="sched-next" id="sched-monthly">—</div></div>
+      <div class="sched-row"><div class="sched-task">Quarterly Committee Review</div><div style="color:#888;font-size:11px">First Monday Mar/Jun/Sep/Dec</div><div class="sched-next" id="sched-quarterly">—</div></div>
+      <div class="sched-row"><div class="sched-task">Annual Reassessment</div><div style="color:#888;font-size:11px">June 1 annually</div><div style="color:#555;font-size:11px" id="sched-annual">—</div></div>
     </div>
     <div class="panel">
       <div class="panel-hdr"><span>LAST ACTIONS LOG</span></div>
       <div class="sched-row"><div class="sched-task">Portfolio established</div><div style="font-size:11px;color:#555">Jun 2, 2026 — 11 trades executed, $949.39 deployed</div></div>
       <div class="sched-row"><div class="sched-task">ATP v2.0 adopted</div><div style="font-size:11px;color:#555">Jun 1, 2026</div></div>
       <div class="sched-row"><div class="sched-task">Dashboard v3 deployed</div><div style="font-size:11px;color:#555">Jun 2, 2026 — operational watchlist added</div></div>
-      <div class="sched-row"><div class="sched-task">Weekly Watchlist Review</div><div style="font-size:11px;color:#555">Jun 8, 2026 — LHX↑ MP↑ ISRG↑ ranked 1-2-3; all Rule 3.5 ineligible (held &lt;7 days)</div></div>
-      <div class="sched-row"><div class="sched-task">Policy Amendment v2.1.1 adopted</div><div style="font-size:11px;color:#555">Jun 8, 2026 — PRO Trade Frequency Exemption (up to 4 PRO trades/event; 7 combined weekly cap). Execution remains manual via Public.com.</div></div>
-      <div class="sched-row"><div class="sched-task">MP Materials added to portfolio</div><div style="font-size:11px;color:#555">Jun 10, 2026 — new 12th position (5.81%), funded by trims to MELI/LMT/PLTR</div></div>
-      <div class="sched-row"><div class="sched-task">Weekly Watchlist Review</div><div style="font-size:11px;color:#555">Jun 15, 2026 — LHX/ROK/CCJ ranked 1-2-3 (all 8/10); all fail Rule 3.5 on 13-day hold + insufficient conviction gap</div></div>
-      <div class="sched-row"><div class="sched-task">Daily Market Pulse</div><div style="font-size:11px;color:#555">Jun 15, 2026 — All TICs clear, no concentration/drawdown breaches, no action required</div></div>
-      <div class="sched-row"><div class="sched-task">LHX Discovery position established</div><div style="font-size:11px;color:#555">Jun 15, 2026 — Buy $50.00 (0.16461 sh @ $303.75), 13th position (4.92%), completing the PRO event from Amendment v2.1.1. ⚠ Cash fell to $25.27 (2.49%), breaching the $40 floor.</div></div>
-      <div class="sched-row"><div class="sched-task">Cash floor restored — rebalancing trims</div><div style="font-size:11px;color:#1B5E20">Jun 15, 2026 — Sold RTX (0.0351 sh, $6.52), GE (0.01858 sh, $6.38), LLY (0.00442 sh, $4.11) to return each to target weight (12% / 10% / 7%). Cash restored to $43.11 (4.24%) ✓. 3 of 3 standard trades used this week.</div></div>
-      <div class="sched-row"><div class="sched-task">Next eligible trade</div><div style="font-size:11px;color:#1B5E20">On policy trigger only (90-day hold from Sep 2, 2026 for original positions; Sep 8, 2026 for MP)</div></div>
+      <div class="sched-row"><div class="sched-task">Next eligible trade</div><div style="font-size:11px;color:#1B5E20">On policy trigger only</div></div>
     </div>
   </div>
   <div class="panel">
-    <div class="panel-hdr"><span>ATP v2.0 QUICK REFERENCE</span><span class="badge">+ Amendment v2.1.1 (Jun 8, 2026)</span></div>
+    <div class="panel-hdr"><span>ATP v2.0 QUICK REFERENCE</span></div>
     <table><thead><tr><th>Category</th><th>Rule</th><th>Limit / Mechanism</th></tr></thead><tbody>
       <tr><td style="color:#C00000;font-weight:bold">HARD</td><td>No leverage</td><td>Cash account only — enforced at brokerage</td></tr>
       <tr><td style="color:#C00000;font-weight:bold">HARD</td><td>No options</td><td>Account type NONE — blocked at brokerage</td></tr>
       <tr><td style="color:#C00000;font-weight:bold">HARD</td><td>Max position</td><td>20% of portfolio at time of purchase</td></tr>
-      <tr><td style="color:#C00000;font-weight:bold">HARD</td><td>Trade frequency</td><td>3 standard trades per calendar week maximum (see Amendment v2.1.1 for PRO exemption)</td></tr>
-      <tr><td style="color:#C00000;font-weight:bold">HARD</td><td>Emergency halt</td><td>S&amp;P circuit breakers OR &gt;20% portfolio drawdown</td></tr>
+      <tr><td style="color:#C00000;font-weight:bold">HARD</td><td>Trade frequency</td><td>3 trades per calendar week maximum</td></tr>
+      <tr><td style="color:#C00000;font-weight:bold">HARD</td><td>Emergency halt</td><td>S&P circuit breakers OR >20% portfolio drawdown</td></tr>
       <tr><td style="color:#C00000;font-weight:bold">HARD</td><td>Cash floor</td><td>$40 minimum uninvested at all times</td></tr>
       <tr><td style="color:#1A3A5C;font-weight:bold">THESIS</td><td>Exits</td><td>TICs only — no sentiment or benchmark-based selling</td></tr>
       <tr><td style="color:#1A3A5C;font-weight:bold">THESIS</td><td>Replacements</td><td>OCO must prove higher risk-adjusted return than position being replaced</td></tr>
       <tr><td style="color:#1A3A5C;font-weight:bold">THESIS</td><td>Risk assessment</td><td>Contrarian identifies single most likely bear case before any sizing</td></tr>
       <tr><td style="color:#2B4C7E;font-weight:bold">PATTERN</td><td>Monthly scan</td><td>Pattern Recognition Report — first Monday each month</td></tr>
       <tr><td style="color:#2B4C7E;font-weight:bold">PATTERN</td><td>Override</td><td>Pre-Dawn/Dawn trend + sufficient strength can displace Mid-stage position</td></tr>
-      <tr><td style="color:#B8860B;font-weight:bold">AMEND 2.1.1</td><td>PRO trade frequency exemption</td><td>A PRO event may generate up to 4 trades (2 funding trims + 2 Discovery entries) without consuming the standard weekly allocation</td></tr>
-      <tr><td style="color:#B8860B;font-weight:bold">AMEND 2.1.1</td><td>Combined weekly cap</td><td>Standard + PRO trades may not exceed 7 combined in any calendar week</td></tr>
-      <tr><td style="color:#B8860B;font-weight:bold">AMEND 2.1.1</td><td>Execution model</td><td>The Council sizes, sequences, and preflights all trades (standard and PRO); order placement in Public.com is performed manually by the account holder</td></tr>
     </tbody></table>
   </div>
 </div>
@@ -264,12 +254,12 @@ tr:hover td{background:#f8fbff}
 
 <script>
 // ══ CONSTANTS ════════════════════════════════════════════════════════
-const ACCT = "5OC33019";
+// Account ID is server-side only
 const INCEPTION_VAL = 1009.73;
 const QQQ_INCEPTION = 742.46;
-const THEMES = {RTX:"Defense",ETN:"Infrastructure",GE:"Aerospace",PLTR:"Defense",MELI:"Growth",CEG:"Nuclear",PWR:"Infrastructure",LMT:"Defense",LLY:"Healthcare",NVDA:"AI/Tech",VST:"Nuclear",MP:"Infrastructure",LHX:"Defense"};
+const THEMES = {RTX:"Defense",ETN:"Infrastructure",GE:"Aerospace",PLTR:"Defense",MELI:"Growth",CEG:"Nuclear",PWR:"Infrastructure",LMT:"Defense",LLY:"Healthcare",NVDA:"AI/Tech",VST:"Nuclear",LHX:"Defense",MP:"Infrastructure"};
 const THEME_C = {"Defense":"#1A3A5C","Infrastructure":"#2B4C7E","Aerospace":"#2E4057","Growth":"#5D4037","Nuclear":"#1B4332","Healthcare":"#4A235A","AI/Tech":"#B8860B","Cash":"#888"};
-const TARGET = {RTX:12,ETN:11,GE:10,PLTR:10,MELI:10,CEG:8,PWR:8,LMT:8,LLY:7,NVDA:6,VST:4,MP:6,LHX:5};
+const TARGET = {RTX:12,ETN:11,GE:10,PLTR:10,MELI:10,CEG:8,PWR:8,LMT:8,LLY:7,NVDA:6,VST:4,LHX:5,MP:6};
 const TICS = {
   RTX:"GTF liability >$10B OR Pratt & Whitney loses major commercial engine competition",
   ETN:"Electrical Americas organic orders <5% for 2 consecutive quarters",
@@ -281,124 +271,122 @@ const TICS = {
   LMT:"3+ European NATO buyers cancel F-35 orders in one calendar year",
   LLY:"Competitor oral GLP-1 approved by FDA with non-inferior efficacy to tirzepatide",
   NVDA:"Hyperscaler cuts Nvidia GPU spend >25% in favour of custom silicon",
-  VST:"ERCOT Q3 wholesale prices >30% below prior year for 2 consecutive summers",
-  MP:"China-US rare earth agreement removes export restrictions AND Independence facility delays magnet production past 2026",
-  LHX:"L3Harris loses a major next-generation EW or radar contract (>$1B) to Northrop Grumman or another competitor, triggering a guidance cut and de-rating against defense peers"
+  VST:"ERCOT Q3 wholesale prices >30% below prior year for 2 consecutive summers"
 };
-const BEAR_PROB = {RTX:35,ETN:30,GE:40,PLTR:45,MELI:25,CEG:30,PWR:35,LMT:30,LLY:35,NVDA:40,VST:30,MP:35,LHX:30};
+const BEAR_PROB = {RTX:35,ETN:30,GE:40,PLTR:45,MELI:25,CEG:30,PWR:35,LMT:30,LLY:35,NVDA:40,VST:30};
 
 // ══ WATCHLIST DATA — auto-replaced by Weekly Watchlist Task ══════════
 // ==WATCHLIST_DATA_START==
 const WATCHLIST_DATA = [
   {
-    rank:1,ticker:"LHX",name:"L3Harris Technologies",theme:"Defense",conv:8,trend:"up",
-    stage:"mid-early",stageLabel:"Mid-Early",aiDep:20,estReturn:"+15-30%",
-    triggerStatus:"active",triggerLabel:"Active — Position Established Jun 15",
-    lastUpdated:"Jun 15, 2026",convHistory:[6,8,8],
-    thesis:"L3Harris continues its pivot from mid-tier supplier to large-scale defense prime, reaffirming 2026 revenue guidance of $23-23.5B and declaring a $1.25 quarterly dividend payable June 26. The $25M Huntsville Advanced Manufacturing Facility expansion adds 130,000 sq ft of solid rocket motor capacity, while new Airbus Helicopters cooperation agreements showcase LHX's WESCAM MX-Series sensors in next-generation rotary-wing platforms. With an 80% Buy/Strong Buy consensus and a $360 price target, LHX's platform-agnostic EW, radar, and comms portfolio benefits from NATO rearmament regardless of which airframes individual nations select.",
-    replaces:{ticker:"LMT",weight:"5%",reason:"LMT's TIC remains tied to European F-35 cancellation risk; LHX's sensor and EW systems are platform-agnostic across NATO airframes. However, LMT's own $10B contract week and Hold→Buy upgrade narrow the rationale for swapping out of it right now."},
-    ocoRationale:"N/A — position established via Amendment v2.1.1 PRO Discovery entry (Jun 15, 2026), not a Rule 3.5 swap. LMT was not sold to fund this; LHX was added as a new 5% Discovery position alongside trims to MELI/LMT from the same PRO event. The original Rule 3.5 comparison (LHX vs LMT, 0-point gap, 13-day hold) still applies to any future full swap of LMT.",
-    bearCase:"L3Harris loses a major next-generation EW or radar contract to Northrop Grumman, causing a revenue miss and de-rating against defense peers.",
-    buyTrigger:"N/A — Discovery position established Jun 15, 2026 at 0.16461 sh / $50.00 (4.92% of portfolio, cost basis $303.75/sh). Monitor for: NATO radar/EW contract win exceeding $2B (positive), or LHX TIC (major EW/radar contract loss to Northrop Grumman) for a conviction review."
+    rank:1,ticker:"NVO",name:"Novo Nordisk",theme:"Healthcare",conv:7,trend:"up",
+    stage:"mid-early",stageLabel:"Mid-Early",aiDep:0,estReturn:"+20-35%",
+    triggerStatus:"watching",triggerLabel:"Watching",
+    lastUpdated:"Jun 2, 2026 (initial)",convHistory:[6,6,7],
+    thesis:"Lower-multiple GLP-1 alternative to LLY following a 2025 pipeline setback (CagriSema failed to outperform Wegovy). Novo's Wegovy/Ozempic franchise generates ~$28B annually. At 25-30x forward earnings vs LLY's ~50x, NVO offers asymmetric upside if the longevity thesis expands the GLP-1 market for all players. Oral semaglutide already approved and gaining prescription share globally.",
+    replaces:{ticker:"LLY",weight:"7%",reason:"Same Healthcare theme. Lower multiple provides better downside protection if GLP-1 market commoditizes. LLY's orforglipron pipeline is stronger, but NVO's valuation reset creates a more compelling risk-reward entry."},
+    ocoRationale:"LLY trades at ~50x forward; NVO at ~25-30x. If GLP-1 efficacy is broadly equivalent across molecules, the market converges to a commodity multiple — NVO has less to lose and more to gain. Switch only if NVO demonstrates competitive oral GLP-1 data or LLY's pipeline thesis weakens.",
+    bearCase:"Novo's oral semaglutide underperforms LLY's orforglipron in head-to-head data, cementing LLY's market share lead and making the 'lower multiple alternative' thesis redundant as NVO loses its clinical parity claim.",
+    buyTrigger:"NVO oral semaglutide 12-week weight loss data non-inferior to orforglipron in any published comparison, OR NVO trades below 20x forward earnings while maintaining Wegovy US market share above 35%."
   },
   {
-    rank:2,ticker:"ROK",name:"Rockwell Automation",theme:"Infrastructure",conv:8,trend:"up",
-    stage:"early",stageLabel:"Early",aiDep:15,estReturn:"+20-32%",
-    triggerStatus:"watching",triggerLabel:"Watching — Reshoring Cycle",
-    lastUpdated:"Jun 15, 2026",convHistory:[6,7,8],
-    thesis:"Rockwell's fiscal Q2 2026 beat (revenue +12% YoY to $2.24B, adjusted EPS +32% YoY to $3.30) drove an 8% raise to full-year EPS guidance, now $12.50-$13.10. Morgan Stanley reiterated its $10 trillion US reshoring thesis and lifted its price target to $525 from $460, arguing every new domestic factory requires Rockwell's automation stack. Strong data center, semiconductor, and logistics automation demand, plus an expanding role in global water infrastructure, diversify ROK's growth vectors beyond traditional manufacturing capex cycles. Shares are up ~18% YTD near 52-week highs.",
-    replaces:{ticker:"ETN",weight:"11%",reason:"ETN covers physical electrical infrastructure; ROK adds the automation software/control layer above it. ETN's week was soft (-6%) despite the strategically sound Dana Mobility merger, widening the conviction gap in ROK's favor."},
-    ocoRationale:"ROK's conviction (8) now exceeds ETN's (7) by one point — directionally favorable but still short of Rule 3.5's 2-point requirement. ETN has been held only 13 days versus the 90-day minimum. ROK's lower AI capex dependency (15% vs ETN's ~32%) offers better diversification if AI infrastructure spending decelerates.",
-    bearCase:"Siemens and ABB win share in US manufacturing automation with superior DCS integration just as the reshoring cycle should be benefiting Rockwell most.",
-    buyTrigger:"North American manufacturing construction starts exceed $15B in a single quarter confirming the nearshoring capex cycle, OR ETN held 90+ days with ROK conviction sustaining a 2+ point edge."
+    rank:2,ticker:"CCJ",name:"Cameco Corporation",theme:"Nuclear",conv:7,trend:"up",
+    stage:"early",stageLabel:"Early",aiDep:0,estReturn:"+25-45%",
+    triggerStatus:"approaching",triggerLabel:"Approaching",
+    lastUpdated:"Jun 2, 2026 (initial)",convHistory:[5,6,7],
+    thesis:"World's largest publicly traded uranium producer, controlling ~18% of global output. Nuclear renaissance — 15+ reactors online in 2026, SMR programs accelerating, hyperscaler PPAs committing to nuclear baseload — all require uranium fuel. CCJ is the picks-and-shovels play for the nuclear power thesis: not the reactor operator (CEG/VST) but the fuel supply chain. Uranium supply is structurally constrained as Kazakhstan's output disappoints relative to projections.",
+    replaces:{ticker:"VST",weight:"4%",reason:"Both are nuclear power chain exposure. CCJ is earlier in the supply chain with higher growth leverage and zero AI capex dependency. VST's 58% AI dependency and -38% stress case make CCJ a cleaner nuclear play if the committee wants to rotate from power generation to fuel supply."},
+    ocoRationale:"VST's bear case requires sustained AI power demand in ERCOT. CCJ's bull case requires reactor starts globally — a broader, more diversified demand driver. CCJ also has a TIC-free thesis (uranium demand is policy-driven, not AI-dependent), while VST has a confirmed 58% AI dependency. Swap frees up nuclear allocation from a binary AI bet to a structural global demand driver.",
+    bearCase:"Kazakhstan's Kazatomprom accelerates production beyond current guidance, flooding the uranium spot market and suppressing prices below CCJ's marginal cost, undermining the supply-scarcity thesis.",
+    buyTrigger:"Spot uranium price sustains above $85/lb for 30 consecutive days, OR VST TIC triggers (ERCOT prices disappoint) and the freed capital needs nuclear exposure, OR second major tech company signs uranium fuel offtake with a North American producer."
   },
   {
-    rank:3,ticker:"CCJ",name:"Cameco Corporation",theme:"Nuclear",conv:8,trend:"up",
-    stage:"early",stageLabel:"Early",aiDep:15,estReturn:"+25-40%",
-    triggerStatus:"approaching",triggerLabel:"Approaching — $85/lb Uranium",
-    lastUpdated:"Jun 15, 2026",convHistory:[7,7,8],
-    thesis:"Cameco and Orano agreed to acquire TEPCO's 5% Cigar Lake stake, lifting Cameco's ownership to 57.4% (Orano to 42.6%), while Urenco USA's enrichment capacity expansion triggered a sector-wide uranium rally this week. Goldman Sachs projects uranium reaching $91/lb by year-end against a 32% supply gap projected by 2045. CCJ holds $1.1B cash and reaffirmed 2026 production guidance of 19.5-21.5M lbs, positioning it to benefit from reactor restarts, SMR builds, and AI-driven hyperscaler power demand.",
-    replaces:{ticker:"VST",weight:"4%",reason:"CCJ sits earlier in the nuclear supply chain with globally diversified demand (reactor starts worldwide) versus VST's ERCOT-concentrated merchant power exposure."},
-    ocoRationale:"CCJ's conviction edge over VST is now 1 point (8 vs 7) — improved but still below Rule 3.5's 2-point bar, and VST has been held only 13 days against the 90-day minimum. The Cigar Lake stake increase and Goldman's $91/lb call strengthen CCJ's supply-scarcity thesis relative to VST's price-dependent merchant model.",
-    bearCase:"Kazatomprom accelerates production beyond guidance, flooding the spot uranium market and compressing CCJ's premium multiple.",
-    buyTrigger:"Spot uranium sustains above $85/lb for 30 consecutive days, OR VST TIC triggers (ERCOT Q3 prices >30% below prior year for 2 consecutive summers), OR VST held 90+ days with CCJ conviction sustaining a 2+ point edge."
+    rank:3,ticker:"LHX",name:"L3Harris Technologies",theme:"Defense",conv:6,trend:"flat",
+    stage:"early",stageLabel:"Early",aiDep:5,estReturn:"+15-30%",
+    triggerStatus:"watching",triggerLabel:"Watching",
+    lastUpdated:"Jun 2, 2026 (initial)",convHistory:[6,6,6],
+    thesis:"Defense electronics specialist: radar systems, electronic warfare, tactical communications, and space surveillance. NATO rearmament is spending heavily on electronic superiority — peer-to-peer warfare in Ukraine and the Middle East proved that sensing, jamming, and communication systems matter as much as platform count. LHX revenue is growing high single digits with a strong backlog of NATO electronics contracts. Unlike LMT, LHX's revenue doesn't depend on any single platform staying politically viable in Europe.",
+    replaces:{ticker:"LMT",weight:"8%",reason:"Both are defense primes, but LMT's single most likely bear case is European buyers choosing domestic alternatives to the F-35. LHX sells radar and comms systems that any military platform uses — Rafale, Eurofighter, or F-35. Diversifies the Defense theme without platform-specific political risk."},
+    ocoRationale:"LMT's F-35 dependency on European procurement is the identified bear case (30% probability). LHX's revenue is platform-agnostic — if Europe buys fewer F-35s and more Rafales, those Rafales still need LHX radar systems. A partial swap from LMT to LHX reduces European political exposure while maintaining NATO rearmament upside.",
+    bearCase:"L3Harris fails to win a next-generation EW or radar contract that analysts are pricing in (competing against Northrop Grumman), causing a revenue miss and de-rating against the defense sector.",
+    buyTrigger:"LMT TIC triggers (3+ European NATO buyers cancel F-35 orders) and the freed capital needs redeployment within the Defense theme, OR LHX wins a NATO radar or EW contract valued at >$2B not yet in consensus estimates."
   },
   {
-    rank:4,ticker:"RDDT",name:"Reddit Inc",theme:"AI/Tech",conv:7,trend:"up",
-    stage:"early",stageLabel:"Early",aiDep:55,estReturn:"+20-40%",
-    triggerStatus:"watching",triggerLabel:"Watching — S&P Inclusion",
-    lastUpdated:"Jun 15, 2026",convHistory:[4,6,7],
-    thesis:"Reddit shares surged 25.5% this week on optimism around an AI data-licensing deal with Google, even as some gains were given back on profit-taking. Consensus 2026 net income estimates were revised up to $1.01B from $871M, reflecting a 65.7% incremental net income margin in Q1 — far above the ~30% margin consensus still assumes. The recent favorable Anthropic ruling strengthens Reddit's negotiating position on data licensing, and DAU growth of 17% YoY to 126.8M supports the engagement story.",
-    replaces:{ticker:"NVDA",weight:"6%",reason:"Both are AI-era plays from different layers — NVDA is compute infrastructure, RDDT is the data layer. A partial NVDA trim to fund RDDT would diversify AI exposure away from capex-dependent compute toward data-licensing economics."},
-    ocoRationale:"NVDA's conviction (8) remains a full point above RDDT's (7), the wrong direction for Rule 3.5. NVDA's S&P credit upgrade and bond offering this week reinforce its near-term strength even amid the broader semi pullback, so the switch does not currently clear despite RDDT's momentum.",
-    bearCase:"Major AI labs develop synthetic data techniques that substitute for real human content, undermining Reddit's licensing leverage and making API revenue transitional rather than structural.",
-    buyTrigger:"Reddit's API/data licensing revenue exceeds $500M annualized run-rate for two consecutive quarters, OR NVDA held 90+ days with conviction falling below 6/10 as AI efficiency gains reduce GPU demand growth."
+    rank:4,ticker:"ROK",name:"Rockwell Automation",theme:"Infrastructure",conv:6,trend:"up",
+    stage:"mid-early",stageLabel:"Mid-Early",aiDep:15,estReturn:"+15-28%",
+    triggerStatus:"watching",triggerLabel:"Watching",
+    lastUpdated:"Jun 2, 2026 (initial)",convHistory:[5,5,6],
+    thesis:"Industrial automation leader for programmable logic controllers, industrial software, and motion control systems. Every new factory in the North American manufacturing renaissance — semiconductor fabs, EV battery plants, aerospace component facilities — requires Rockwell's automation systems. Nearshoring is economically viable only with automation: human labor in Mexico doesn't fully close the cost gap with China. ROK sells the software and hardware layer that converts raw factory space into competitive manufacturing capacity.",
+    replaces:{ticker:"ETN",weight:"11%",reason:"Partial trim of ETN rather than full replacement. ETN covers physical electrical infrastructure; ROK adds the automation software layer above it. Together they cover both the enabling infrastructure (ETN) and the operational intelligence (ROK) of the nearshoring and energy transition themes."},
+    ocoRationale:"ETN is a hardware business; ROK adds software-driven recurring revenue from the same industrial buildout. ETN's AI dependency is estimated at 32%; ROK's is ~15% (industrial automation demand is primarily nearshoring-driven, not AI-capex-driven). Adding ROK alongside ETN creates a more complete industrial infrastructure position with better margin profile.",
+    bearCase:"Rockwell loses market share to Siemens and ABB as European competitors pursue US manufacturing customers with superior DCS integration, and AI-native industrial software companies (PTC, Aveva) bypass ROK's hardware-dependent product stack.",
+    buyTrigger:"North American manufacturing construction starts exceed $15B in a single quarter (confirming nearshoring capex cycle is sustained), OR ETN grows to >16% of portfolio through appreciation and needs trimming — ROK absorbs the proceeds."
   },
   {
-    rank:5,ticker:"XEL",name:"Xcel Energy",theme:"Infrastructure",conv:7,trend:"up",
-    stage:"mid",stageLabel:"Mid",aiDep:25,estReturn:"+15-22%",
-    triggerStatus:"watching",triggerLabel:"Contingent — VST TIC",
-    lastUpdated:"Jun 15, 2026",convHistory:[4,6,7],
-    thesis:"Xcel finalized its Colorado rate case settlement ($225M revenue increase, 9.3% ROE, 54.5% equity ratio) on June 2 and confirmed Google is funding all infrastructure for its 750MW Minnesota data center campus, saving ratepayers $1.5B over 15 years. The $60B five-year capital plan and reaffirmed 2026 EPS guidance of $4.04-$4.16 support 9% annual EPS growth through 2030. A Strong Buy consensus (17 buy vs. 1 sell) and $91.39 average target versus a $76.41 share price suggest meaningful upside for a regulated utility.",
-    replaces:{ticker:"VST",weight:"4%",reason:"Contingent replacement only — if VST's TIC triggers, XEL offers continued power-sector exposure with regulated earnings certainty instead of ERCOT merchant price risk."},
-    ocoRationale:"XEL's conviction has improved to 7 (from 4 two weeks ago) on the back of de-risking regulatory wins, narrowing the gap to VST's 7. Still, this remains a defensive contingency rather than an active swap — VST has not breached its TIC, and the 90-day hold requirement is unmet.",
-    bearCase:"Colorado PUC denies future rate increases needed for grid upgrades, squeezing earned returns below cost of capital and pressuring the dividend.",
-    buyTrigger:"VST TIC triggers (ERCOT Q3 wholesale prices >30% below prior year for 2 consecutive summers) and the committee opts for defensive power-sector exposure at lower risk tolerance."
+    rank:5,ticker:"ISRG",name:"Intuitive Surgical",theme:"Healthcare",conv:6,trend:"up",
+    stage:"mid-early",stageLabel:"Mid-Early",aiDep:0,estReturn:"+18-30%",
+    triggerStatus:"watching",triggerLabel:"Watching",
+    lastUpdated:"Jun 2, 2026 (initial)",convHistory:[5,6,6],
+    thesis:"The da Vinci surgical robot platform is the dominant system in minimally invasive surgery with 9,000+ installed systems globally. The razor/blade model — robot placement followed by recurring instruments, accessories, and service revenue — generates exceptional, predictable free cash flow. As AI-assisted surgery becomes clinical standard, ISRG is the AI-in-healthcare play that has zero dependency on AI infrastructure spending. Its moat is physical: installed robots take years to replace and surgeons train on a single system.",
+    replaces:{ticker:"PLTR",weight:"10%",reason:"PLTR trades at 90-108x forward earnings with identified 45% bear case probability from multiple compression alone. ISRG trades at 60-70x forward with a more defensible physical moat (robot installations can't be swapped out quarterly). Reduces the portfolio's highest-probability bear case while retaining premium-multiple exposure to AI's application layer."},
+    ocoRationale:"PLTR's single most likely failure mode is valuation, not business quality. ISRG's moat is more defensible (physical installation + surgical training creates 5-7 year switching cycles) and its business has 0% AI infrastructure dependency. The OCO case: ISRG offers comparable growth trajectory at lower valuation risk with a genuinely different fundamental driver.",
+    bearCase:"Medtronic's Hugo robotic system gains regulatory approval in the US and demonstrates non-inferior outcomes to da Vinci in a major randomized trial, breaking ISRG's near-monopoly and triggering hospital purchasing committee reconsiderations across the installed base.",
+    buyTrigger:"PLTR conviction drops to 6/10 or below on forward valuation grounds AND ISRG reports procedure volume growth >18% for two consecutive quarters, confirming installed base expansion is accelerating."
   },
   {
-    rank:6,ticker:"OKLO",name:"Oklo Inc",theme:"Nuclear",conv:7,trend:"up",
-    stage:"dawn",stageLabel:"Dawn",aiDep:40,estReturn:"+50-200% or -90%",
-    triggerStatus:"watching",triggerLabel:"Watching — NRC / July 4",
-    lastUpdated:"Jun 15, 2026",convHistory:[5,6,7],
-    thesis:"Oklo was selected by the DOE for advanced negotiations under the Surplus Plutonium Utilization Program and received accelerated NRC approval of the Principal Design Criteria for its Aurora reactor. The June 4 acquisition of Armec Corporation (40 employees) bolsters in-house nuclear manufacturing capability ahead of the Groves test reactor's targeted criticality on July 4, 2026. The 1.2GW Meta agreement remains the anchor of the AI-baseload-power thesis.",
-    replaces:{ticker:"VST",weight:"4%",reason:"Speculative nuclear option if VST's TIC triggers — higher variance, higher potential return than CCJ or XEL for the same freed capital."},
-    ocoRationale:"This week's DOE/NRC milestones and the Armec acquisition meaningfully de-risk the permitting timeline, lifting conviction to 7. However, OKLO remains pre-revenue with a -$105.7M TTM net loss and -$0.72 EPS, and CEO insider selling from early June (200,000 shares at $65-70) still tempers near-term conviction relative to CCJ's cash-generative profile.",
-    bearCase:"NRC delays the construction permit past Q1 2027, forcing a dilutive capital raise while commercial revenue stays 5+ years out — compressing the equity option value regardless of the technology's merit.",
-    buyTrigger:"NRC issues Oklo's construction permit AND a second tech company (beyond OpenAI-linked entities) signs a commercial microreactor agreement specifying pre-2030 delivery, AND CEO insider selling ceases for 60+ days."
+    rank:6,ticker:"OKLO",name:"Oklo Inc",theme:"Nuclear",conv:5,trend:"flat",
+    stage:"dawn",stageLabel:"Dawn",aiDep:70,estReturn:"+50-200% or 0%",
+    triggerStatus:"watching",triggerLabel:"Watching — NRC",
+    lastUpdated:"Jun 2, 2026 (initial)",convHistory:[5,5,5],
+    thesis:"Pre-revenue small modular reactor developer. Exited the inaugural portfolio due to 72% AI dependency and binary pre-revenue risk. Remains on watchlist because the core thesis — AI creates extraordinary power demand that the grid cannot serve, requiring co-located microreactors — has not been invalidated, only time-extended. NRC construction permit decision expected H1 2026. Sam Altman as chairman provides the AI/tech industry alignment that makes commercial deals plausible. Sized only if VST TIC triggers and freed capital needs nuclear replacement.",
+    replaces:{ticker:"VST",weight:"4%",reason:"If VST's TIC triggers (ERCOT prices fail to materialize), OKLO is the speculative nuclear replacement — higher risk, higher return potential, same theme. Position size would be limited to 4% maximum, reflecting the binary pre-revenue risk profile."},
+    ocoRationale:"VST is a merchant power company whose upside depends on AI data center demand in Texas. OKLO is a bet on a different nuclear future entirely — distributed microreactors that don't require grid interconnection. Only substitute if the ERCOT/merchant-power thesis fails and the committee still wants nuclear power exposure.",
+    bearCase:"NRC delays construction permit beyond Q1 2027, requiring an additional capital raise that dilutes existing shareholders by 20%+ while commercial revenue remains 5+ years away — compressing the equity option value regardless of the underlying technology's merit.",
+    buyTrigger:"NRC issues Oklo construction permit AND a second tech company (beyond OpenAI-affiliated entities) signs a commercial microreactor power agreement with Oklo specifying a delivery timeline before 2030."
   },
   {
-    rank:7,ticker:"NVO",name:"Novo Nordisk",theme:"Healthcare",conv:7,trend:"flat",
-    stage:"dawn",stageLabel:"Dawn",aiDep:5,estReturn:"+35-55%",
-    triggerStatus:"watching",triggerLabel:"Watching — 2028 Recovery",
-    lastUpdated:"Jun 15, 2026",convHistory:[7,7,7],
-    thesis:"Oral Wegovy surpassed 3 million US prescriptions in roughly five months — one prescription every five seconds — the fastest-scaling pharmaceutical launch by volume on record. New CagriSema and zenagamtide data was presented at the ADA 2026 meeting in New Orleans this week. At a 12.5x TTM P/E versus the 40-50x range for peers, NVO remains the deepest-value entry in the GLP-1 category heading into a 2028 guidance recovery, with 53% share of the $74B GLP-1 agonist market.",
-    replaces:{ticker:"LLY",weight:"7%",reason:"LLY remains the portfolio's best performer (+6.43% on cost basis), but if GLP-1 efficacy continues to converge across molecules, NVO offers substantially more re-rating upside from its depressed multiple."},
-    ocoRationale:"LLY's retatrutide data this week (28.3% body weight loss in Phase 3 TRIUMPH-1) was a strong positive surprise that keeps LLY's conviction at 8 — a full point above NVO's 7, the wrong direction for Rule 3.5. The OCO gap has not closed this week despite NVO's prescription milestone.",
-    bearCase:"LLY's oral orforglipron demonstrates superior efficacy to oral semaglutide in head-to-head data, cementing LLY's market dominance while NVO's reset-year guidance prolongs its de-rating.",
-    buyTrigger:"LLY held 90+ days with NVO conviction sustaining a 2+ point edge, OR NVO's oral semaglutide demonstrates non-inferior efficacy to LLY's orforglipron in a published head-to-head comparison, OR NVO trades below 10x forward earnings while maintaining >35% US Wegovy market share."
+    rank:7,ticker:"TSLA",name:"Tesla",theme:"Aerospace",conv:5,trend:"flat",
+    stage:"dawn",stageLabel:"Dawn",aiDep:20,estReturn:"+30-150% or -30%",
+    triggerStatus:"watching",triggerLabel:"Watching — Optimus",
+    lastUpdated:"Jun 2, 2026 (initial)",convHistory:[5,5,5],
+    thesis:"The committee tracks Tesla primarily as a humanoid robotics company that also makes EVs. Optimus Gen 3 entered mass production January 21, 2026, targeting 100-300K units at $20-30K each. If robot production scales, Tesla owns the manufacturing infrastructure, AI software stack, and actuator supply chain that no competitor can replicate at comparable cost. The EV business is a structural headwind; Optimus is a pre-revenue option whose TAM is orders of magnitude larger than the EV business.",
+    replaces:{ticker:"GE",weight:"10%",reason:"Both are industrial/physical world plays. GE's bull case requires Boeing to recover production. Tesla's Optimus bull case is independent of any other company's execution. However, TSLA's EV headwinds are real — the stock prices both EV and Optimus simultaneously, making clean-entry difficult until the robot business unit is more clearly valued separately."},
+    ocoRationale:"GE's most likely bear case is Boeing — a company GE doesn't control. Tesla's most likely bear case is its own execution. The OCO case for TSLA is not currently stronger than GE: wait for Optimus to establish external commercial deployment metrics before rotating. The committee will revisit this analysis after the first external Optimus customer deployment is announced.",
+    bearCase:"Tesla's Optimus robots fail to achieve the reliability and safety benchmarks required for external commercial deployment by end of 2027, forcing Tesla to restrict them to internal use and push back the public availability timeline by 2+ years.",
+    buyTrigger:"Tesla reports Optimus units deployed at an external customer (not Tesla's own facilities) exceeding 1,000 units with disclosed productivity metrics showing ROI positive compared to human labor within 18 months."
   },
   {
-    rank:8,ticker:"ISRG",name:"Intuitive Surgical",theme:"Healthcare",conv:7,trend:"flat",
-    stage:"dawn",stageLabel:"Dawn",aiDep:35,estReturn:"+25-45%",
-    triggerStatus:"watching",triggerLabel:"Watching — Valuation Reset",
-    lastUpdated:"Jun 15, 2026",convHistory:[6,7,7],
-    thesis:"Intuitive Surgical remains down ~26% YTD despite Q1 revenue growth of 23% and a 40% EBIT jump, with the da Vinci 5 platform unveiling 100+ new innovations and Japan expanding robotic-procedure reimbursement to 7 new categories in June. The stock trades near intrinsic DCF value (~$407-412) on a 9,000+ installed-base recurring-revenue model that remains structurally intact despite recent volatility.",
-    replaces:{ticker:"PLTR",weight:"10%",reason:"PLTR remains down ~11% on cost basis and trades at 90x+ forward earnings; ISRG offers similar premium-multiple exposure at a reset valuation with a more durable physical installed-base moat."},
-    ocoRationale:"Conviction is unchanged at 7 this week, while PLTR also holds at 7 — no gap has opened for Rule 3.5. A new FDA early alert on SureForm 30 gray stapler reloads adds a fresh, near-term risk to ISRG's bear case that offsets the da Vinci 5 momentum, keeping the comparison neutral.",
-    bearCase:"Medtronic's Hugo system gains FDA approval with non-inferior outcomes data, breaking the near-monopoly that justifies ISRG's premium multiple — compounded by the active stapler-reload safety recall.",
-    buyTrigger:"PLTR held 90+ days with conviction below 6/10 on forward valuation grounds AND ISRG reports procedure volume growth >18% for two consecutive quarters, OR ISRG drops a further 10% below current levels while fundamentals remain intact."
+    rank:8,ticker:"MP",name:"MP Materials",theme:"Infrastructure",conv:5,trend:"up",
+    stage:"early",stageLabel:"Early",aiDep:5,estReturn:"+20-50%",
+    triggerStatus:"approaching",triggerLabel:"Policy Watch",
+    lastUpdated:"Jun 2, 2026 (initial)",convHistory:[4,5,5],
+    thesis:"The only operating rare earth mining and processing company in the United States, producing neodymium-praseodymium (NdPr) for permanent magnets essential in EV motors, wind turbines, and defense systems. The January 2026 White House critical minerals executive action explicitly targeted domestic rare earth processing. MP is constructing domestic magnet manufacturing in Fort Worth, TX — positioning itself as the complete US rare earth supply chain from mining to finished magnets.",
+    replaces:{ticker:"MELI",weight:"10%",reason:"Only substitutes if a binding domestic content mandate makes MP's revenue structurally secured by legislation. MELI's thesis is entirely market-driven and more durable — it does not depend on government policy continuity. MP replaces MELI only if Congress passes mandatory domestic rare earth content for DoD procurement."},
+    ocoRationale:"MELI's thesis (LatAm digital financial inclusion) is secular and compounding. MP's thesis is policy-dependent. The OCO case for MP only clears if binding legislation transforms MP's revenue from speculative to contracted — at which point the risk-adjusted return comparison improves dramatically. Without that, MELI's independent growth thesis is stronger.",
+    bearCase:"China floods global rare earth markets with subsidized supply at prices below MP's operating costs, making domestic production economically unviable without ongoing government subsidy that may not survive political cycles.",
+    buyTrigger:"Congress passes legislation mandating domestic rare earth content in DoD-procured defense systems (creating binding demand), OR Pentagon signs a long-term NdPr offtake agreement with MP guaranteeing revenue through 2030."
   },
   {
-    rank:9,ticker:"MP",name:"MP Materials Corp",theme:"Infrastructure",conv:7,trend:"down",
-    stage:"mid-early",stageLabel:"Mid-Early",aiDep:25,estReturn:"+20-45%",
-    triggerStatus:"active",triggerLabel:"Active — Position Established Jun 10",
-    lastUpdated:"Jun 15, 2026",convHistory:[5,8,7],
-    thesis:"MP Materials was added to the portfolio on Jun 10, 2026 as the 12th position (5.81% weight, cost basis +8.36%). Q1 2026 revenue rose 49% YoY to $90.65M, and MP secured Apple and Department of Defense contracts, shifting the story from policy-dependent to commercially anchored. The Independence magnet facility in Texas begins production in H2 2026, pivoting MP toward higher-value finished magnets, with the DoW $110/kg NdPr price floor already in place. Wall Street targets remain around $80-90.",
-    replaces:{ticker:"MELI",weight:"~8% combined (MELI/LMT/PLTR)",reason:"This replacement has already been executed — MP was funded primarily via trims to MELI (-4.3pp), LMT (-2.6pp), and PLTR (-1.2pp) versus original target weights, consistent with last week's #2-ranked candidate."},
-    ocoRationale:"Now a live holding rather than a candidate. The Apple/DoD contracts support the OCO case that drove last week's #2 ranking, but CEO James Litinsky's sale of 850,000+ shares (~$26M total) between April-June and a ~10% pullback on easing US-China rare-earth tensions trim conviction from 8 to 7. Recommend monitoring closely as a holding rather than treating the thesis as settled.",
-    bearCase:"China floods the rare earth market with subsidized supply below MP's marginal cost, or the Independence facility hits production quality/timeline issues that disappoint Apple's supply chain schedule.",
-    buyTrigger:"N/A — position already established Jun 10, 2026. Monitor for: Independence facility commercial magnet deliveries confirmed in H2 2026 (positive), or continued insider selling and price weakness that would warrant a conviction downgrade below 6 and a TIC review."
+    rank:9,ticker:"XEL",name:"Xcel Energy",theme:"Nuclear",conv:4,trend:"flat",
+    stage:"mid",stageLabel:"Mid",aiDep:20,estReturn:"+10-18%",
+    triggerStatus:"watching",triggerLabel:"Contingent",
+    lastUpdated:"Jun 2, 2026 (initial)",convHistory:[4,4,4],
+    thesis:"Vertically integrated regulated utility in the Upper Midwest and Colorado with a strong renewable portfolio. IRA tax credits fund significant grid upgrade and transmission expansion programs. Most exposed to data center growth in Colorado and Minnesota of any pure regulated utility. A lower-risk, lower-return alternative to VST for power demand exposure — rate-of-return regulation provides downside protection but caps upside.",
+    replaces:{ticker:"VST",weight:"4%",reason:"Contingent replacement only — if VST TIC triggers and the committee wants to maintain power/energy theme exposure with significantly lower risk. XEL's regulated utility model eliminates merchant power exposure in exchange for capped but predictable returns."},
+    ocoRationale:"VST has 58% AI dependency and -38% stress case. XEL has ~20% AI dependency and a regulated earnings floor. The switch trades upside for certainty. Only appropriate if: (1) VST TIC triggers, (2) the committee still wants power sector exposure, and (3) market conditions favor defensive positioning over merchant power upside.",
+    bearCase:"Xcel's Colorado Public Utilities Commission denies rate increases needed to fund grid upgrades, squeezing earned returns below the cost of capital and triggering a dividend cut that re-rates the utility to distressed levels.",
+    buyTrigger:"VST TIC triggers (ERCOT Q3 power prices fail to materialize) and committee decides to maintain power sector exposure at lower risk tolerance, specifically replacing merchant power risk with regulated utility exposure."
   },
   {
-    rank:10,ticker:"TSLA",name:"Tesla Inc",theme:"Growth",conv:6,trend:"up",
-    stage:"dawn",stageLabel:"Dawn",aiDep:75,estReturn:"+10-30% or -40%",
-    triggerStatus:"watching",triggerLabel:"Watching — Optimus Deploy",
-    lastUpdated:"Jun 15, 2026",convHistory:[5,5,6],
-    thesis:"Tesla launched its unsupervised robotaxi service in Austin in early June — fully autonomous, no safety driver — finally delivering the concrete autonomy milestone the stock has been pricing in. JPMorgan upgraded to Neutral with a $475 target this week, the most optimistic broker action in months though still not a Buy. The energy division remains on pace for $20B+ 2026 revenue, and EU registrations rose 67% YoY on the refreshed Model Y. Optimus remains the linchpin for justifying TSLA's 300x+ forward P/E.",
-    replaces:{ticker:"GE",weight:"10%",reason:"Both are physical-world industrial plays — GE's bull case depends on Boeing's external production recovery, while TSLA's depends on its own execution. GE's strong week (Strong Buy reaffirmed, Wolfspeed MOU, new board director) keeps it ahead for now."},
-    ocoRationale:"TSLA's conviction improves to 6 on the robotaxi launch, but GE remains at 8 — a 2-point gap in the wrong direction. The OCO case does not clear; revisit when robotaxi expands beyond Austin to 2-3 additional cities or Optimus reaches an external deployment milestone.",
-    bearCase:"Tesla's Optimus robots fail to achieve reliability/safety benchmarks for external commercial deployment by end of 2027, forcing internal-use-only restriction while EV competition from BYD and Chinese OEMs intensifies in Europe and LatAm.",
-    buyTrigger:"Robotaxi service expands to 2-3 additional major cities (e.g. Houston, Dallas, Phoenix) with improving safety metrics, AND GE conviction drops below 7/10."
+    rank:10,ticker:"RDDT",name:"Reddit",theme:"AI/Tech",conv:4,trend:"up",
+    stage:"early",stageLabel:"Early",aiDep:30,estReturn:"+25-60%",
+    triggerStatus:"watching",triggerLabel:"Watching",
+    lastUpdated:"Jun 2, 2026 (initial)",convHistory:[3,4,4],
+    thesis:"Reddit owns one of the largest corpora of human-generated internet content used to train AI models, and its API licensing creates a structural new revenue stream as AI companies pay for authentic human data. More strategically: as AI-generated content floods the internet, real human opinion at scale becomes increasingly scarce and valuable. Reddit's communities generate unfiltered, real-time human discourse that synthetic data cannot replicate. Pattern stage: Early — market recognizes the AI training data angle but hasn't modeled the compounding licensing revenue trajectory.",
+    replaces:{ticker:"NVDA",weight:"6%",reason:"Both are AI-era beneficiaries, but from different layers: NVDA is compute infrastructure (92% AI dependency); RDDT is the data layer (30% AI dependency). A partial trim of NVDA to fund RDDT would shift AI exposure from the capital-intensive compute layer to the data-scarcity layer — with a potentially superior risk-adjusted return if AI efficiency gains commoditize compute but increase the value of authentic human data."},
+    ocoRationale:"NVDA's most likely bear case is AI model efficiency improvements reducing compute demand per query. Paradoxically, those same efficiency improvements — making AI cheaper to run — increase the volume of AI deployments, which increases the need for diverse training data. RDDT benefits from the same efficiency trends that threaten NVDA's marginal GPU demand.",
+    bearCase:"Major AI companies develop synthetic data generation techniques (using existing AI to create training data) that effectively substitute for real human-generated content, eliminating Reddit's data licensing leverage and turning its API revenue into a transitional rather than structural income stream.",
+    buyTrigger:"Reddit reports API and data licensing revenue exceeding $500M annualized run rate for two consecutive quarters, OR NVDA conviction drops below 6/10 and portfolio needs AI exposure with lower compute-cycle dependency."
   }
 ];
 // ==WATCHLIST_DATA_END==
@@ -408,6 +396,77 @@ const f2=n=>Number(n).toFixed(2);
 const fp=n=>(n>=0?'+':'')+Number(n).toFixed(2)+'%';
 let chartInst=null;
 let currentFilter='all';
+
+// ── Schedule date helpers ─────────────────────────────────────────────
+function computeScheduleDates(){
+  const now=new Date();
+  const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function fmtDate(d){
+    const today=new Date(now);today.setHours(0,0,0,0);
+    const dd=new Date(d);dd.setHours(0,0,0,0);
+    const diff=Math.round((dd-today)/86400000);
+    const t=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+    if(diff===0)return'Today '+t;
+    if(diff===1)return'Tomorrow '+t;
+    return DAYS[d.getDay()]+' '+MONTHS[d.getMonth()]+' '+d.getDate();
+  }
+
+  function nextWeekday(hour,min){
+    const d=new Date(now);d.setSeconds(0,0);
+    d.setHours(hour,min,0,0);
+    if(d<=now)d.setDate(d.getDate()+1);
+    while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);
+    return d;
+  }
+
+  function nextDOW(dow,hour=9,min=0){
+    const d=new Date(now);d.setHours(hour,min,0,0);
+    let diff=(dow-d.getDay()+7)%7;
+    if(diff===0&&d<=now)diff=7;
+    d.setDate(d.getDate()+diff);
+    return d;
+  }
+
+  function firstMondayOfMonth(yr,mo){
+    const d=new Date(yr,mo,1);
+    while(d.getDay()!==1)d.setDate(d.getDate()+1);
+    return d;
+  }
+
+  function nextMonthly(){
+    // First Monday of next month
+    const d=firstMondayOfMonth(now.getMonth()===11?now.getFullYear()+1:now.getFullYear(),now.getMonth()===11?0:now.getMonth()+1);
+    d.setHours(9,0,0,0);return d;
+  }
+
+  function nextQuarterly(){
+    const quarters=[2,5,8,11];
+    for(const m of quarters){
+      let yr=now.getFullYear();
+      const d=firstMondayOfMonth(yr,m);d.setHours(9,0,0,0);
+      if(d>now)return d;
+    }
+    return firstMondayOfMonth(now.getFullYear()+1,2);
+  }
+
+  const pulse=nextWeekday(8,30);
+  const risk=nextWeekday(16,30);
+  const wl=nextDOW(0,9,0);
+  const monthly=nextMonthly();
+  const quarterly=nextQuarterly();
+  const annual=new Date(now.getFullYear()+(now.getMonth()>=5?1:0),5,1);
+
+  const el=id=>document.getElementById(id);
+  if(el('sched-pulse'))el('sched-pulse').textContent=fmtDate(pulse);
+  if(el('sched-risk'))el('sched-risk').textContent=fmtDate(risk);
+  if(el('sched-watchlist'))el('sched-watchlist').textContent=fmtDate(wl);
+  if(el('sched-monthly'))el('sched-monthly').textContent=fmtDate(monthly);
+  if(el('sched-quarterly'))el('sched-quarterly').textContent=fmtDate(quarterly);
+  if(el('sched-annual'))el('sched-annual').textContent='Jun 1, '+annual.getFullYear();
+  if(el('wl-next-date'))el('wl-next-date').textContent='Next: '+fmtDate(wl)+' via Weekly Task';
+}
 
 function showTab(id,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -424,39 +483,32 @@ function filterWL(filter,el){
 }
 
 // ══ LOAD DATA ════════════════════════════════════════════════════════
-// Netlify build: data comes from serverless functions (netlify/functions/portfolio.js
-// and quotes.js), which proxy Public.com's REST API server-side using the
-// PUBLIC_COM_SECRET / PUBLIC_COM_ACCOUNT_ID environment variables. The browser
-// never sees the secret — it just calls these same-origin /api/* routes.
+// No MCP parsing needed — Netlify functions return plain JSON
+
 async function loadAll(){
   document.getElementById('ts').textContent='Refreshing…';
 
-  // Load portfolio
+  // ── Portfolio ──────────────────────────────────────────────────────
   let p={positions:[],equity:[]};
   try{
     const res=await fetch('/api/portfolio');
-    if(res.ok){
-      const parsed=await res.json();
-      if(parsed&&Array.isArray(parsed.positions))p=parsed;
-    }
-  }catch(e){}
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    if(data&&Array.isArray(data.positions))p=data;
+  }catch(e){document.getElementById('ts').textContent='Portfolio error: '+e.message;}
 
-  // Load quotes
+  // ── Quotes ─────────────────────────────────────────────────────────
   let qArr=[];
   try{
     const res=await fetch('/api/quotes',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({symbols:["QQQ","RTX","ETN","GE","PLTR","MELI","CEG","PWR","LMT","LLY","NVDA","VST","MP"]})
+      body:JSON.stringify({symbols:['QQQ','RTX','ETN','GE','PLTR','MELI','CEG','PWR','LMT','LLY','NVDA','VST','LHX','MP']}),
     });
-    if(res.ok){
-      const parsed=await res.json();
-      if(Array.isArray(parsed))qArr=parsed;
-      else if(parsed&&Array.isArray(parsed.quotes))qArr=parsed.quotes;
-    }
+    if(res.ok)qArr=await res.json();
   }catch(e){}
 
-  const qqqQ=qArr.find(x=>x&&x.instrument&&x.instrument.symbol==='QQQ');
+  const qqqQ=Array.isArray(qArr)?qArr.find(x=>x&&x.instrument&&x.instrument.symbol==='QQQ'):null;
   const qqqPrice=qqqQ?parseFloat(qqqQ.last):null;
 
   try{renderOverview(p,qqqPrice);}catch(e){
@@ -467,6 +519,7 @@ async function loadAll(){
   }
   try{renderRisk(p,qqqPrice);}catch(e){}
   renderWatchlist();
+  computeScheduleDates();
   document.getElementById('ts').textContent='Updated: '+new Date().toLocaleTimeString();
 }
 
@@ -538,18 +591,24 @@ function renderRisk(data,qqqPrice){
   const stk=parseFloat(data.equity?.find(e=>e.type==='STOCK')?.value||0);
   const total=cash+stk;
   const incPct=((total-INCEPTION_VAL)/INCEPTION_VAL*100);
+  // Drawdown = how far below inception we are (0 when at or above inception — you can't be in drawdown while positive)
+  const drawdownPct=incPct<0?Math.abs(incPct):0;
   const maxPos=pos.reduce((m,p)=>Math.max(m,parseFloat(p.percentOfPortfolio||0)),0);
   const halt20=incPct<-20,halt15=incPct<-15;
+  const nearStop=pos.filter(p=>parseFloat(p.costBasis?.gainPercentage||0)<-15);
+  const atStop=pos.some(p=>parseFloat(p.costBasis?.gainPercentage||0)<-25);
+  const policyLine=`No leverage ✓ · No options ✓ · Max position ${maxPos>20?'⚠ '+f2(maxPos)+'% BREACH':'OK ('+f2(maxPos)+'%)'} · Cash floor ${cash>=40?'OK ($'+f2(cash)+')':'⚠ $'+f2(cash)+' BELOW $40'} · Halt: ${halt20?'ACTIVE':'None'}`;
+  const stopLine=nearStop.map(p=>p.instrument.symbol+' '+f2(parseFloat(p.costBasis?.gainPercentage||0))+'%').join(', ')||'All positions above −15% — clear';
 
   document.getElementById('risk-meters').innerHTML=`
-    <div class="meter-row"><div class="meter-label">Portfolio drawdown from ATH</div><div class="meter-bar"><div class="meter-fill" style="width:${Math.min(Math.abs(incPct)/20*100,100)}%;background:${halt20?'#C00000':halt15?'#E65100':'#1B5E20'}"></div></div><div class="meter-val" style="color:${halt20?'#C00000':halt15?'#E65100':'#1B5E20'}">${f2(incPct)}%</div></div>
-    <div class="meter-row"><div class="meter-label">Largest position (20% limit)</div><div class="meter-bar"><div class="meter-fill" style="width:${maxPos/20*100}%;background:${maxPos>20?'#C00000':maxPos>15?'#E65100':'#1B5E20'}"></div></div><div class="meter-val" style="color:${maxPos>20?'#C00000':maxPos>15?'#E65100':'#1B5E20'}">${f2(maxPos)}%</div></div>
-    <div class="meter-row"><div class="meter-label">Cash reserve ($40 floor)</div><div class="meter-bar"><div class="meter-fill" style="width:${Math.min(cash/40*100,100)}%;background:${cash<40?'#C00000':'#1B5E20'}"></div></div><div class="meter-val" style="color:${cash<40?'#C00000':'#1B5E20'}">$${f2(cash)}</div></div>
-    <div class="meter-row"><div class="meter-label">Positions near stop-loss (−25%)</div><div class="meter-bar"><div class="meter-fill" style="width:${pos.filter(p=>parseFloat(p.costBasis?.gainPercentage||0)<-15).length/11*100}%;background:${pos.some(p=>parseFloat(p.costBasis?.gainPercentage||0)<-25)?'#C00000':pos.some(p=>parseFloat(p.costBasis?.gainPercentage||0)<-15)?'#E65100':'#1B5E20'}"></div></div><div class="meter-val" style="color:${pos.some(p=>parseFloat(p.costBasis?.gainPercentage||0)<-15)?'#E65100':'#1B5E20'}">${pos.filter(p=>parseFloat(p.costBasis?.gainPercentage||0)<-15).length||'None'}</div></div>
+    <div class="meter-row"><div class="meter-label">Portfolio drawdown from inception</div><div class="meter-bar"><div class="meter-fill" style="width:${Math.min(drawdownPct/20*100,100)}%;background:${halt20?'#C00000':halt15?'#E65100':'#1B5E20'}"></div></div><div class="meter-val" style="color:${halt20?'#C00000':halt15?'#E65100':'#1B5E20'}">${drawdownPct===0?'0.00%':f2(drawdownPct)+'%'}</div></div>
+    <div class="meter-row"><div class="meter-label">Largest position (20% limit)</div><div class="meter-bar"><div class="meter-fill" style="width:${Math.min(maxPos/20*100,100)}%;background:${maxPos>20?'#C00000':maxPos>15?'#E65100':'#1B5E20'}"></div></div><div class="meter-val" style="color:${maxPos>20?'#C00000':maxPos>15?'#E65100':'#1B5E20'}">${f2(maxPos)}%</div></div>
+    <div class="meter-row"><div class="meter-label">Cash reserve ($40 floor)</div><div class="meter-bar"><div class="meter-fill" style="width:${Math.min(cash/120*100,100)}%;background:${cash>=40?'#1B5E20':'#C00000'}"></div></div><div class="meter-val" style="color:${cash>=40?'#1B5E20':'#C00000'}">$${f2(cash)}</div></div>
+    <div class="meter-row"><div class="meter-label">Positions near stop-loss (−25%)</div><div class="meter-bar"><div class="meter-fill" style="width:${Math.min(nearStop.length/pos.length*100,100)}%;background:${atStop?'#C00000':nearStop.length>0?'#E65100':'#1B5E20'}"></div></div><div class="meter-val" style="color:${atStop?'#C00000':nearStop.length>0?'#E65100':'#1B5E20'}">${nearStop.length||'None'}</div></div>
     <div class="meter-row"><div class="meter-label">Emergency halt status</div><div class="meter-bar"><div class="meter-fill" style="width:${halt20?100:0}%;background:#C00000"></div></div><div class="meter-val" style="color:${halt20?'#C00000':'#1B5E20'}">${halt20?'ACTIVE':'None'}</div></div>
     <div style="padding:10px 14px;background:#f8f9fa;font-size:11px;color:#555;line-height:1.6">
-      <b>Policy:</b> No leverage ✓ · No options ✓ · Max position ${maxPos>20?'<span style="color:#C00000;font-weight:bold">BREACH ('+f2(maxPos)+'%)</span>':'OK'} · Cash floor ${cash<40?'<span style="color:#C00000;font-weight:bold">BREACH ($'+f2(cash)+' &lt; $40)</span>':'OK'} · Halt: ${halt20?'<span style="color:#C00000;font-weight:bold">ACTIVE</span>':'None'}<br>
-      <b>Stop alerts:</b> ${pos.filter(p=>parseFloat(p.costBasis?.gainPercentage||0)<-15).map(p=>p.instrument.symbol+' '+f2(parseFloat(p.costBasis?.gainPercentage||0))+'%').join(', ')||'All positions above −15% — clear'}
+      <b>Policy:</b> ${policyLine}<br>
+      <b>Stop alerts:</b> ${stopLine}
     </div>`;
 
   const qqqPct=qqqPrice?((qqqPrice-QQQ_INCEPTION)/QQQ_INCEPTION*100):null;
