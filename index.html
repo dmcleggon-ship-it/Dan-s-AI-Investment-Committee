@@ -223,6 +223,8 @@ tr:hover td{background:#f8fbff}
     </div>
     <div class="panel">
       <div class="panel-hdr"><span>LAST ACTIONS LOG</span></div>
+      <div class="sched-row"><div class="sched-task">CCJ purchased — PLTR replacement</div><div style="font-size:11px;color:#1B5E20">Jun 25, 2026 — Buy CCJ $77.00 (0.74095 sh @ $103.92). Nuclear fuel supply chain. 8% target. Replaces PLTR slot.</div></div>
+      <div class="sched-row"><div class="sched-task">PLTR sold — TIC/stop-loss exit</div><div style="font-size:11px;color:#C00000">Jun 25, 2026 — Position exited. Thesis invalidated. Freed ~$88 redeployed to CCJ.</div></div>
       <div class="sched-row"><div class="sched-task">Policy Amendment v2.1 adopted</div><div style="font-size:11px;color:#1B5E20">Jun 17, 2026 — Discovery Allocation &amp; Pattern Recognition Override framework formalized. Max 30% aggregate Discovery Allocation; max 5% initial / 10% per position. PRO conditions, promotion, and removal rules now govern all non-Core positions.</div></div>
       <div class="sched-row"><div class="sched-task">LHX Discovery position established</div><div style="font-size:11px;color:#555">Jun 15, 2026 — Buy $50.00 (0.16461 sh @ $303.75), 13th position (4.92%), completing the PRO event from Amendment v2.1.1.</div></div>
       <div class="sched-row"><div class="sched-task">Policy Amendment v2.1.1 adopted</div><div style="font-size:11px;color:#555">Jun 8, 2026 — PRO Trade Frequency Exemption (up to 4 PRO trades/event; 7 combined weekly cap). Execution remains manual via Public.com.</div></div>
@@ -266,23 +268,23 @@ tr:hover td{background:#f8fbff}
 // Account ID is server-side only
 const INCEPTION_VAL = 1009.73;
 const QQQ_INCEPTION = 742.46;
-const THEMES = {RTX:"Defense",ETN:"Infrastructure",GE:"Aerospace",PLTR:"Defense",MELI:"Growth",CEG:"Nuclear",PWR:"Infrastructure",LMT:"Defense",LLY:"Healthcare",NVDA:"AI/Tech",VST:"Nuclear",LHX:"Defense",MP:"Infrastructure"};
+const THEMES = {RTX:"Defense",ETN:"Infrastructure",GE:"Aerospace",MELI:"Growth",CEG:"Nuclear",PWR:"Infrastructure",LMT:"Defense",LLY:"Healthcare",NVDA:"AI/Tech",VST:"Nuclear",LHX:"Defense",MP:"Infrastructure",CCJ:"Nuclear"};
 const THEME_C = {"Defense":"#1A3A5C","Infrastructure":"#2B4C7E","Aerospace":"#2E4057","Growth":"#5D4037","Nuclear":"#1B4332","Healthcare":"#4A235A","AI/Tech":"#B8860B","Cash":"#888"};
-const TARGET = {RTX:12,ETN:11,GE:10,PLTR:10,MELI:10,CEG:8,PWR:8,LMT:8,LLY:7,NVDA:6,VST:4,LHX:5,MP:6};
+const TARGET = {RTX:12,ETN:11,GE:10,MELI:10,CEG:8,PWR:8,LMT:8,LLY:7,NVDA:6,VST:4,LHX:5,MP:6,CCJ:8};
 const TICS = {
   RTX:"GTF liability >$10B OR Pratt & Whitney loses major commercial engine competition",
   ETN:"Electrical Americas organic orders <5% for 2 consecutive quarters",
   GE:"Boeing <20 MAX deliveries/month for 3 consecutive months with no recovery plan",
-  PLTR:"US government revenue growth <20% YoY for 2 consecutive quarters",
   MELI:"Argentina imposes capital controls restricting USD conversion",
   CEG:"FERC rules against nuclear co-located hyperscaler premium pricing",
   PWR:"Federal transmission permitting reform reversed or materially weakened",
   LMT:"3+ European NATO buyers cancel F-35 orders in one calendar year",
   LLY:"Competitor oral GLP-1 approved by FDA with non-inferior efficacy to tirzepatide",
   NVDA:"Hyperscaler cuts Nvidia GPU spend >25% in favour of custom silicon",
-  VST:"ERCOT Q3 wholesale prices >30% below prior year for 2 consecutive summers"
+  VST:"ERCOT Q3 wholesale prices >30% below prior year for 2 consecutive summers",
+  CCJ:"Kazatomprom accelerates production beyond guidance, flooding uranium spot market and suppressing prices below CCJ's marginal cost"
 };
-const BEAR_PROB = {RTX:35,ETN:30,GE:40,PLTR:45,MELI:25,CEG:30,PWR:35,LMT:30,LLY:35,NVDA:40,VST:30};
+const BEAR_PROB = {RTX:35,ETN:30,GE:40,MELI:25,CEG:30,PWR:35,LMT:30,LLY:35,NVDA:40,VST:30,CCJ:30};
 
 // ══ WATCHLIST DATA — auto-replaced by Weekly Watchlist Task ══════════
 // ==WATCHLIST_DATA_START==
@@ -512,7 +514,7 @@ async function loadAll(){
     const res=await fetch('/api/quotes',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({symbols:['QQQ','RTX','ETN','GE','PLTR','MELI','CEG','PWR','LMT','LLY','NVDA','VST','LHX','MP']}),
+      body:JSON.stringify({symbols:['QQQ','RTX','ETN','GE','MELI','CEG','PWR','LMT','LLY','NVDA','VST','LHX','MP','CCJ']}),
     });
     if(res.ok)qArr=await res.json();
   }catch(e){}
