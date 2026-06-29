@@ -218,6 +218,7 @@ tr:hover td{background:#f8fbff}
       <div class="sched-row"><div class="sched-task">Daily Risk Monitor</div><div style="color:#888;font-size:11px">Weekdays 4:30 PM</div><div class="sched-next" id="sched-risk">—</div></div>
       <div class="sched-row"><div class="sched-task">Weekly Watchlist Review</div><div style="color:#888;font-size:11px">Sundays 9:00 AM</div><div class="sched-next" id="sched-watchlist">—</div></div>
       <div class="sched-row"><div class="sched-task">Monthly Portfolio Snapshot</div><div style="color:#888;font-size:11px">First Monday of month</div><div class="sched-next" id="sched-monthly">—</div></div>
+      <div class="sched-row"><div class="sched-task">Monthly Pattern Recognition</div><div style="color:#888;font-size:11px">Second Monday of month</div><div class="sched-next" id="sched-pattern">—</div></div>
       <div class="sched-row"><div class="sched-task">Quarterly Committee Review</div><div style="color:#888;font-size:11px">First Monday Mar/Jun/Sep/Dec</div><div class="sched-next" id="sched-quarterly">—</div></div>
       <div class="sched-row"><div class="sched-task">Annual Reassessment</div><div style="color:#888;font-size:11px">June 1 annually</div><div style="color:#555;font-size:11px" id="sched-annual">—</div></div>
     </div>
@@ -454,9 +455,28 @@ function computeScheduleDates(){
   }
 
   function nextMonthly(){
-    // First Monday of next month
-    const d=firstMondayOfMonth(now.getMonth()===11?now.getFullYear()+1:now.getFullYear(),now.getMonth()===11?0:now.getMonth()+1);
-    d.setHours(9,0,0,0);return d;
+    // First Monday of this month if still future, else first Monday of next month
+    const d=firstMondayOfMonth(now.getFullYear(),now.getMonth());
+    d.setHours(9,0,0,0);
+    if(d>now)return d;
+    const nxt=new Date(now.getFullYear(),now.getMonth()+1,1);
+    const d2=firstMondayOfMonth(nxt.getFullYear(),nxt.getMonth());
+    d2.setHours(9,0,0,0);return d2;
+  }
+
+  function nextPattern(){
+    // Second Monday of month — days 8-14
+    function secondMonday(yr,mo){
+      const d=new Date(yr,mo,8);
+      while(d.getDay()!==1)d.setDate(d.getDate()+1);
+      return d;
+    }
+    const d=secondMonday(now.getFullYear(),now.getMonth());
+    d.setHours(9,0,0,0);
+    if(d>now)return d;
+    const nxt=new Date(now.getFullYear(),now.getMonth()+1,1);
+    const d2=secondMonday(nxt.getFullYear(),nxt.getMonth());
+    d2.setHours(9,0,0,0);return d2;
   }
 
   function nextQuarterly(){
@@ -473,6 +493,7 @@ function computeScheduleDates(){
   const risk=nextWeekday(16,30);
   const wl=nextDOW(0,9,0);
   const monthly=nextMonthly();
+  const pattern=nextPattern();
   const quarterly=nextQuarterly();
   const annual=new Date(now.getFullYear()+(now.getMonth()>=5?1:0),5,1);
 
@@ -481,6 +502,7 @@ function computeScheduleDates(){
   if(el('sched-risk'))el('sched-risk').textContent=fmtDate(risk);
   if(el('sched-watchlist'))el('sched-watchlist').textContent=fmtDate(wl);
   if(el('sched-monthly'))el('sched-monthly').textContent=fmtDate(monthly);
+  if(el('sched-pattern'))el('sched-pattern').textContent=fmtDate(pattern);
   if(el('sched-quarterly'))el('sched-quarterly').textContent=fmtDate(quarterly);
   if(el('sched-annual'))el('sched-annual').textContent='Jun 1, '+annual.getFullYear();
   if(el('wl-next-date'))el('wl-next-date').textContent='Next: '+fmtDate(wl)+' via Weekly Task';
