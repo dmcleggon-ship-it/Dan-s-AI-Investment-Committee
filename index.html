@@ -591,19 +591,17 @@ function renderOverview(data,qqqPrice){
   const cash=parseFloat(data.equity?.find(e=>e.type==='CASH')?.value||0);
   const stk=parseFloat(data.equity?.find(e=>e.type==='STOCK')?.value||0);
   const total=cash+stk;
-  const tGain=pos.reduce((s,p)=>s+parseFloat(p.costBasis?.gainValue||0),0);
-  const tCost=pos.reduce((s,p)=>s+parseFloat(p.costBasis?.totalCost||0),0);
-  const gPct=tCost>0?(tGain/tCost*100):0;
+  const dollarChange=total-INCEPTION_VAL;
   const dayG=pos.reduce((s,p)=>s+parseFloat(p.positionDailyGain?.gainValue||0),0);
   const incPct=((total-INCEPTION_VAL)/INCEPTION_VAL*100);
   const qqqPct=qqqPrice?((qqqPrice-QQQ_INCEPTION)/QQQ_INCEPTION*100):null;
   const alpha=qqqPct!==null?(incPct-qqqPct):null;
 
   document.getElementById('summary-cards').innerHTML=`
-    <div class="card"><div class="card-lbl">Portfolio Value</div><div class="card-val gold">$${f2(total)}</div><div class="card-sub">Inception $1,009.73</div></div>
-    <div class="card"><div class="card-lbl">Since Inception</div><div class="card-val ${incPct>=0?'green':'red'}">${fp(incPct)}</div><div class="card-sub">${tGain>=0?'+':''}$${f2(Math.abs(tGain))} on positions</div></div>
+    <div class="card"><div class="card-lbl">Portfolio Value</div><div class="card-val gold">$${f2(total)}</div><div class="card-sub">Inception $${f2(INCEPTION_VAL)}</div></div>
+    <div class="card"><div class="card-lbl">Since Inception</div><div class="card-val ${incPct>=0?'green':'red'}">${fp(incPct)}</div><div class="card-sub">${dollarChange>=0?'+':''}$${f2(Math.abs(dollarChange))} total</div></div>
     <div class="card"><div class="card-lbl">Today's P&L</div><div class="card-val ${dayG>=0?'green':'red'}">${dayG>=0?'+':''}$${f2(Math.abs(dayG))}</div><div class="card-sub">Cash: $${f2(cash)} (${f2(cash/total*100)}%)</div></div>
-    <div class="card"><div class="card-lbl">Alpha vs QQQ</div><div class="card-val ${alpha!==null&&alpha>=0?'green':'red'}">${alpha!==null?fp(alpha):'—'}</div><div class="card-sub">${qqqPrice?'QQQ $'+f2(qqqPrice)+' ('+fp(qqqPct)+')':'—'}</div></div>
+    <div class="card"><div class="card-lbl">Alpha vs QQQ</div><div class="card-val ${alpha!==null&&alpha>=0?'green':'red'}">${alpha!==null?fp(alpha):'—'}</div><div class="card-sub">${qqqPrice?'QQQ '+fp(qqqPct)+' since Jun 2':'—'}</div></div>
   `;
   document.getElementById('ov-badge').textContent=pos.length+' positions · $'+f2(cash)+' cash';
   const rows=pos.map(p=>{
